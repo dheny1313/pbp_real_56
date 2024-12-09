@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Cbarang;
+use App\Http\Controllers\Cbooks;
 use App\Http\Controllers\Cdashboard;
 use App\Http\Controllers\Clogin;
 use App\Http\Controllers\Csuplier;
@@ -10,6 +11,8 @@ use App\Http\Controllers\Cpesanan;
 use App\Http\Controllers\Cuser;
 use App\Http\Controllers\Cpembelian;
 use App\Http\Controllers\Cnote;
+use App\Http\Controllers\Cdoa;
+use App\Http\Controllers\Ckamus;
 use App\Models\Mdashboard;
 use Illuminate\Contracts\Filesystem\Cloud;
 
@@ -62,6 +65,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource("suplier", Csuplier::class)->except(['show']);
     Route::get('/suplier/cetak', [Csuplier::class, 'cetak'])->name('suplier.cetak');
+    Route::get('/suplier/export_excel', [Csuplier::class, 'export_excel'])->name('suplier.export_excel');
 
 
     //pembeli route empety
@@ -72,6 +76,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/pembeli/edit_simpan/{id_pembeli}', [Cpembeli::class, "simpan_edit"])->name("pembeli.simpan_data_update");
     Route::delete('pembeli/hapus/{id_pembeli}', [Cpembeli::class, "hapus"])->name("pembeli.hapus");
     Route::get('/pembeli/cetak', [Cpembeli::class, "cetak"])->name("pembeli.cetak");
+    Route::get('/pembeli/excel', [Cpembeli::class, "excel"])->name("pembeli.excel");
 
     // note route empety
     Route::get('/notes', [Cnote::class, "index"])->name("note.index");
@@ -101,6 +106,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pesanan/edit/{id_pesanan}', [Cpesanan::class, "edit"])->name("pesanan.edit");
     Route::put('/pesanan/edit_simpan/{id_pesanan}', [Cpesanan::class, "simpan_edit"])->name("pesanan.simpan_edit");
     Route::delete('/pesanan/hapus/{id_pesanan}', [Cpesanan::class, "hapus"])->name("pesanan.hapus");
+    // route cetak ini buat cetak smeua dan filter by tgl
     Route::get('/pesanan/cetak', [Cpesanan::class, "cetak"])->name("pesanan.cetak");
     Route::get('/pesanan/cetak_excel', [Cpesanan::class, "cetak_excel"])->name("pesanan.cetak_excel");
 
@@ -113,4 +119,12 @@ Route::middleware(['auth'])->group(function () {
     Route::put("/pembelian/edit_simpan/{id_pembelian}", [Cpembelian::class, "simpan_edit"])->name("pembelian.simpan_edit");
     Route::delete("/pembelian/hapus/{id_pembelian}", [Cpembelian::class, "hapus"])->name("pembelian.hapus");
     Route::get('/pembelian/cetak', [Cpembelian::class, "cetak"])->name("pembelian.cetak");
+    Route::get('/pembelian/excel', [Cpembelian::class, "excel"])->name("pembelian.excel");
+
+    // get api doa
+    Route::get("/doa", [Cdoa::class, "index"])->name("doa");
+    // get api book 
+    Route::get("/books", [Cbooks::class, "index"])->name("books.api");
+    // get kamus
+    Route::get("/kamus", [Ckamus::class, "index"])->name("kamus.api");
 });

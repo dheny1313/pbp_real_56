@@ -134,6 +134,28 @@
                         </a>
                     </li>
 
+                    <li class="nav-item">
+                        <a href="{{route('doa')}}" class="nav-link {{Request::is('doa') ? 'active warna_link_aktive' : ''}}">
+                            <i class="icon ion-ios-home-outline"></i>
+                            <span>doa</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="{{route('books.api')}}" class="nav-link {{Request::is('books') ? 'active warna_link_aktive' : ''}}">
+                            <i class="icon ion-ios-home-outline"></i>
+                            <span>Api Books</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="{{route('kamus.api')}}" class="nav-link {{Request::is('/kamus') ? 'active warna_link_aktive' : ''}}">
+                            <i class="icon ion-ios-home-outline"></i>
+                            <span>kamus</span>
+                        </a>
+                    </li>
+
+
 
 
                     <!-- nav-item -->

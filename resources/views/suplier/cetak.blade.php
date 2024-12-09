@@ -39,7 +39,7 @@ href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" i
         <tbody>
             @foreach ($suplier as $item)
             <tr>
-                <td>{{ $item->suplier }}</td>
+                <td>{{ $item->id_suplier }}</td>
                 <td>{{ $item->nama }}</td>
                 <td>{{ $item->alamat }}</td>
                 <td>{{ $item->kode_pos }}</td>

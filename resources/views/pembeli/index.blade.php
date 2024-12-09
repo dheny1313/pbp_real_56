@@ -21,6 +21,7 @@
                 <a href="{{route("pembeli.tambah_data")}} " class="text-white">tambah data pembeli</a>
             </button>
             <a href="{{route("pembeli.cetak")}} " class="text-white btn btn-info btn-sm" target="_blank">cetak data pembeli</a>
+            <a href="{{route("pembeli.excel")}} " class="text-white btn btn-secondary btn-sm" target="_blank">export data pembeli</a>
         </div>
         <div class="card-body">
             <table class="table" id="example">

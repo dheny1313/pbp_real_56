@@ -36,10 +36,10 @@
                             <form onsubmit="return confirm('Yakin hapus data user ini?');" action="{{ route('user.hapus', $item->id) }}" method="post">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Hapus</button>
-                                <a href="{{ route('user.edit', $item->id) }}" class="btn btn-warning">Edit</a>
+                                <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+                                <a href="{{ route('user.edit', $item->id) }}" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></a>
+                            <a href="{{route('user.cetak_user',$item->id)}}"  target="_blank" class="btn btn-info btn-sm"><i class="fa fa-print"></i></a>
                             </form>
-                            <a href="{{route('user.cetak_user',$item->id)}}"  target="_blank" class="btn btn-info btn-sm"><i class="fa "></i></a>
                         </td>
                     </tr>
                     @endforeach

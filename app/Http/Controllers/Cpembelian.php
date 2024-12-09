@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Redis;
 use Illuminate\Validation\Rules\Unique;
 use Nette\Utils\Strings;
 
+//ini buat excel
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+
 use function Laravel\Prompts\table;
 
 class Cpembelian extends Controller
@@ -136,5 +141,80 @@ class Cpembelian extends Controller
             $newKode = 'BUY' . $tahun_bulan . '-' . str_pad($newKodeNumber, 3, '0', STR_PAD_LEFT);
         }
         return $newKode;
+    }
+
+    public function excel()
+    {
+        $data = DB::table("pembelian")
+            ->leftJoin("barang", "pembelian.id_barang", "=", "barang.id_barang")
+            ->leftJoin("suplier", "pembelian.id_suplier", "=", "suplier.id_suplier")
+            ->select("pembelian.*", "suplier.nama as nama_suplier", "barang.nama as nama_barang")
+            ->get();
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $sheet->mergeCells('A1:F1');  // Menggabungkan sel A1 hingga B1 untuk judul
+        // Style untuk judul
+        $sheet->setCellValue('A1', "Data Pembelian Dheny Cahyono")
+            ->getStyle('A1')->applyFromArray([
+                'font' => [
+                    'bold' => true,
+                    'size' => 16,
+                ],
+                'alignment' => [
+                    'horizontal' => Alignment::HORIZONTAL_CENTER,
+                    'vertical' => Alignment::VERTICAL_CENTER,
+                ],
+            ]);
+        // Set header kolom
+        $sheet->setCellValue('A2', 'ID pembelian');
+        $sheet->setCellValue('B2', 'ID barang');
+        $sheet->setCellValue('C2', 'nama suplier');
+        $sheet->setCellValue('D2', 'nama barang');
+        $sheet->setCellValue('E2', 'Quantity');
+        $sheet->setCellValue('F2', 'Tanggal Pesan');
+
+        // Isi data mulai dari baris kedua
+        $row = 3;
+        foreach ($data as $pembelian) {
+            $sheet->setCellValue('A' . $row, $pembelian->id_pembelian);
+            $sheet->setCellValue('B' . $row, $pembelian->id_barang);
+            $sheet->setCellValue('C' . $row, $pembelian->nama_suplier);
+            $sheet->setCellValue('D' . $row, $pembelian->nama_barang);
+            $sheet->setCellValue('E' . $row, $pembelian->qty);
+            $sheet->setCellValue('F' . $row, $pembelian->tgl_pembelian);
+            $row++;
+        }
+
+        //auto size column
+        $sheet->getColumnDimension('A')->setAutoSize(true);
+        $sheet->getColumnDimension('B')->setAutoSize(true);
+        $sheet->getColumnDimension('C')->setAutoSize(true);
+        $sheet->getColumnDimension('D')->setAutoSize(true);
+        $sheet->getColumnDimension('D')->setAutoSize(true);
+        $sheet->getColumnDimension('F')->setAutoSize(true);
+        // Menambahkan border ke cell
+        $styleArray = [
+            'borders' => [
+                'outline' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    'color' => ['argb' => 'FF000000'],
+                ],
+            ],
+        ];
+        $sheet->getStyle('A1:F1')->applyFromArray($styleArray);
+
+        // Simpan file Excel ke dalam format download
+        $writer = new Xlsx($spreadsheet);
+        $fileName = 'data_pembelian_dheny.xlsx';
+
+        // Set header untuk download file
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $fileName . '"');
+        header('Cache-Control: max-age=0');
+
+        $writer->save('php://output');
+        exit;
     }
 }

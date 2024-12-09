@@ -6,6 +6,12 @@ use App\Models\Msuplier;
 use Illuminate\Http\Request;
 use Psy\SuperglobalsEnv;
 
+// buat excel
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Illuminate\Support\Facades\Response;
+
+
 class Csuplier extends Controller
 {
     /**
@@ -122,5 +128,45 @@ class Csuplier extends Controller
             $kode_baru = 'S-' . str_pad($nomor_baru, 4, '0', STR_PAD_LEFT);
         }
         return $kode_baru;
+    }
+
+    public function export_excel()
+    {
+        // Create a new spreadsheet
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Retrieve data from the Msuplier model
+        $suplierData = Msuplier::all();
+
+        // Set header row
+        $sheet->setCellValue('A3', 'ID suplier');
+        $sheet->setCellValue('B3', 'Nama');
+        $sheet->setCellValue('C3', 'alamat');
+        $sheet->setCellValue('D3', 'kode pos');
+        $sheet->setCellValue('E3', 'kota');
+
+
+        // Insert data rows
+        $row = 4; // Starting from the second row
+        foreach ($suplierData as $suplier) {
+            $sheet->setCellValue('A' . $row, $suplier->id_suplier);
+            $sheet->setCellValue('B' . $row, $suplier->nama);
+            $sheet->setCellValue('C' . $row, $suplier->alamat);
+            $sheet->setCellValue('D' . $row, $suplier->kode_pos);
+            $sheet->setCellValue('E' . $row, $suplier->kota);
+            $row++;
+        }
+
+        // Create a writer to export as Xlsx
+        $writer = new Xlsx($spreadsheet);
+
+        // Save the file to PHP output
+        $fileName = 'data_suplier_dheny.xlsx';
+        $tempFile = tempnam(sys_get_temp_dir(), $fileName);
+        $writer->save($tempFile);
+
+        // Return the file as a response for download
+        return Response::download($tempFile, $fileName)->deleteFileAfterSend(true);
     }
 }

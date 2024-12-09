@@ -7,6 +7,12 @@ use App\Models\Mpembeli;
 use Dotenv\Util\Str;
 use GrahamCampbell\ResultType\Success;
 
+// buat excel
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Illuminate\Support\Facades\Response;
+
+
 class Cpembeli extends Controller
 {
     public function tampil()
@@ -97,5 +103,49 @@ class Cpembeli extends Controller
     {
         $pembeli = Mpembeli::get();
         return view('pembeli.cetak', compact('pembeli'));
+    }
+
+    public function excel()
+    {
+
+        // Create a new spreadsheet
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Retrieve data from the Mpembeli model
+        $pembeliData = Mpembeli::all();
+
+        // Set header row
+        $sheet->setCellValue('A1', 'ID pembeli');
+        $sheet->setCellValue('B1', 'Nama');
+        $sheet->setCellValue('C1', 'jenis kelamin');
+        $sheet->setCellValue('D1', 'alamat');
+        $sheet->setCellValue('E1', 'kode pos');
+        $sheet->setCellValue('F1', 'kota');
+        $sheet->setCellValue('G1', 'tanggal lahir');
+
+        // Insert data rows
+        $row = 2; // Starting from the second row
+        foreach ($pembeliData as $pembeli) {
+            $sheet->setCellValue('A' . $row, $pembeli->id_pembeli);
+            $sheet->setCellValue('B' . $row, $pembeli->nama);
+            $sheet->setCellValue('C' . $row, $pembeli->jns_kelamin);
+            $sheet->setCellValue('D' . $row, $pembeli->alamat);
+            $sheet->setCellValue('E' . $row, $pembeli->kode_pos);
+            $sheet->setCellValue('f' . $row, $pembeli->kota);
+            $sheet->setCellValue('g' . $row, $pembeli->tgl_lahir);
+            $row++;
+        }
+
+        // Create a writer to export as Xlsx
+        $writer = new Xlsx($spreadsheet);
+
+        // Save the file to PHP output
+        $fileName = 'data_pembeli_dheny.xlsx';
+        $tempFile = tempnam(sys_get_temp_dir(), $fileName);
+        $writer->save($tempFile);
+
+        // Return the file as a response for download
+        return Response::download($tempFile, $fileName)->deleteFileAfterSend(true);
     }
 }

@@ -30,13 +30,20 @@ use function PHPUnit\Framework\returnSelf;
 
 class Cpesanan extends Controller
 {
-    public function tampil()
+    public function tampil(Request $request)
     {
-        $pesanan = DB::table('pesanan')
+        $query = DB::table('pesanan')
             ->leftjoin('pembeli', 'pesanan.id_pelanggan', '=', 'pembeli.id_pembeli')
             ->leftjoin('barang', 'pesanan.id_barang', '=', 'barang.id_barang')
             ->select('pesanan.*', 'barang.nama as nama_barang', 'pembeli.nama as nama_pembeli')
-            ->get();
+            ->orderBy('pesanan.tgl_pesan', 'DESC');
+
+        if ($request->filled('dari') && $request->filled('sampai')) {
+            $query->whereBetween('pesanan.tgl_pesan', [$request->dari, $request->sampai]);
+        }
+
+        $pesanan = $query->get();
+
 
         return view('pesanan.index', compact('pesanan'));
     }
@@ -119,13 +126,20 @@ class Cpesanan extends Controller
         return redirect()->route("pesanan.tampil")->with("success", "data berhasil dihapus");
     }
 
-    public function cetak()
+    public function cetak(Request $request)
     {
-        $pesanan = DB::table('pesanan')
+        $query = DB::table('pesanan')
             ->leftJoin("pembeli", "pesanan.id_pelanggan", "=", "pembeli.id_pembeli")
             ->leftJoin("barang", "pesanan.id_barang", "=", "barang.id_barang")
-            ->select("pesanan.*", "barang.nama as nama_barang", "pembeli.nama as nama_pembeli")
-            ->get();
+            ->select("pesanan.*", "barang.nama as nama_barang", "pembeli.nama as nama_pembeli");
+
+        if ($request->filled('dari') && $request->filled('sampai')) {
+            $query->whereBetween('tgl_pesan', [$request->dari, $request->sampai]);
+        }
+
+
+        $pesanan = $query->get();
+
         return view('pesanan.cetak', compact('pesanan'));
     }
 

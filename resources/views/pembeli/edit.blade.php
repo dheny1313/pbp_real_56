@@ -32,7 +32,7 @@
             <select name="jns_kelamin" id="" >
                 <option value="">pilih</option>
                 <option value="laki-laki" {{$pembeli->jns_kelamin == "laki-laki" ? "selected" : ""}}>laki-laki</option>
-                <option value="perempuan" {{$pembeli->jns_kelamin == "laki-laki" ? "selected" : ""}}>perempuan</option>
+                <option value="perempuan" {{$pembeli->jns_kelamin == "perempuan" ? "selected" : ""}}>perempuan</option>
             </select>
             <br>
             

@@ -42,8 +42,8 @@ ga perlu extends --}}
             <tr>
                 <td>{{ $item->id_barang }}</td>
                 <td>{{ $item->nama }}</td>
-                <td>{{ $item->harga_beli }}</td>
-                <td>{{ $item->harga_jual }}</td>
+                <td>{{ rupiah($item->harga_beli) }}</td>
+                <td>{{ rupiah($item->harga_jual) }}</td>
             </tr>
             @endforeach
         </tbody>

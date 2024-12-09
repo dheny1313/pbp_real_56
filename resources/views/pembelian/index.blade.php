@@ -8,6 +8,7 @@
             <h1>Data Pembelian</h1>
             <a href="{{route("pembelian.tambah")}}" class="btn btn-success">tambah data</a>
             <a href="{{route("pembelian.cetak")}}" class="btn btn-info">cetak data</a>
+            <a href="{{route("pembelian.excel")}}" class="btn btn-info" target="_blank">export to excel </a>
             <hr>
         </div>
         <div class="card-body">

@@ -16,7 +16,8 @@
         <div class="card-header">
             <h1>hello ini page suplier</h1>
             <a href="{{route('suplier.create')}}"><button class="btn btn-success">tambah data</button></a>
-            <a href="{{route('suplier.cetak')}}"><button class="btn btn-info">cetak data suplier</button></a>
+            <a href="{{route('suplier.cetak')}}" title="cetak data suplier" target="_blank"><button class="btn btn-info" ><i class="fa fa-print" ></i>&nbsp;cetak data suplier</button></a>
+            <a href="{{route('suplier.export_excel')}}" title="export to excel data suplier" target="_blank" class="btn btn-secondary">&nbsp;export to excel data suplier</a>
         </div>
         <div class="card-body">
             <table class="table" id="example">

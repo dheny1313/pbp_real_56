@@ -123,7 +123,7 @@ href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" i
                     <td>{{ $item->nama_suplier }}</td>
                     <td>{{ $item->nama_barang }}</td>
                     <td>{{ $item->qty }}</td>
-                    <td>{{ $item->tgl_pembelian }}</td>
+                    <td>{{ tanggal($item->tgl_pembelian)}}</td>
                 </tr>
                 @endforeach
             </tbody>
